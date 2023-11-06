@@ -68,6 +68,14 @@
             "PrerequisitesLocation" = "2:1"
             "Url" = "8:"
             "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.7.2"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4.7.2 (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.7.2"
+                    }
+                }
             }
         }
         "Release"
@@ -92,6 +100,14 @@
             "PrerequisitesLocation" = "2:1"
             "Url" = "8:"
             "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.7.2"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4.7.2 (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.7.2"
+                    }
+                }
             }
         }
     }
@@ -279,15 +295,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:GPT Wrapper"
-        "ProductCode" = "8:{8E2070E8-EDF1-46A9-B9F1-9F6F6894BE0B}"
-        "PackageCode" = "8:{3EE05C8B-64B4-44C8-84B7-ACBBA6E37156}"
+        "ProductCode" = "8:{1F6BC8B9-2B55-4DA4-A4F7-540F5DC2029D}"
+        "PackageCode" = "8:{123C3F11-753A-4B59-B985-88BB236E528C}"
         "UpgradeCode" = "8:{0FB4E302-0017-4A11-B82B-21E089A71F3A}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:FALSE"
         "InstallAllUsers" = "11:TRUE"
-        "ProductVersion" = "8:1.1.4"
+        "ProductVersion" = "8:1.2"
         "Manufacturer" = "8:mtCode"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
