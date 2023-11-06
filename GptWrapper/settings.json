@@ -19,7 +19,7 @@
     {
       "Name": "Error",
       "Key": "E",
-      "Template": "I'm encountering this error:'\r\n<error>\r\n@focusedText\r\n</error>",
+      "Template": "I'm encountering this error:\r\n<error>\r\n@focusedText\r\n</error>",
       "AutoSubmit": true
     }
   ]
