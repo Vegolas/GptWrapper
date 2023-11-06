@@ -61,6 +61,14 @@
         "PrivateKeyFile" = "8:"
         "TimeStampServer" = "8:"
         "InstallerBootstrapper" = "3:2"
+            "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
+            {
+            "Enabled" = "11:TRUE"
+            "PromptEnabled" = "11:TRUE"
+            "PrerequisitesLocation" = "2:1"
+            "Url" = "8:"
+            "ComponentsUrl" = "8:"
+            }
         }
         "Release"
         {
@@ -77,6 +85,14 @@
         "PrivateKeyFile" = "8:"
         "TimeStampServer" = "8:"
         "InstallerBootstrapper" = "3:2"
+            "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
+            {
+            "Enabled" = "11:TRUE"
+            "PromptEnabled" = "11:TRUE"
+            "PrerequisitesLocation" = "2:1"
+            "Url" = "8:"
+            "ComponentsUrl" = "8:"
+            }
         }
     }
     "Deployable"
@@ -263,15 +279,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:GPT Wrapper"
-        "ProductCode" = "8:{AF4A6AFB-BA05-423B-B643-A63222936376}"
-        "PackageCode" = "8:{B3D4044A-9484-4172-9F70-93FA5898871C}"
+        "ProductCode" = "8:{8E2070E8-EDF1-46A9-B9F1-9F6F6894BE0B}"
+        "PackageCode" = "8:{3EE05C8B-64B4-44C8-84B7-ACBBA6E37156}"
         "UpgradeCode" = "8:{0FB4E302-0017-4A11-B82B-21E089A71F3A}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
-        "DetectNewerInstalledVersion" = "11:TRUE"
+        "DetectNewerInstalledVersion" = "11:FALSE"
         "InstallAllUsers" = "11:TRUE"
-        "ProductVersion" = "8:1.1.3"
+        "ProductVersion" = "8:1.1.4"
         "Manufacturer" = "8:mtCode"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"

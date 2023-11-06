@@ -10,7 +10,7 @@
     <StartupObject>GptWrapper.Program</StartupObject>
     <ApplicationIcon>Resources\openai-logo.ico</ApplicationIcon>
     <Title>GPT Wrapper</Title>
-    <Version>1.0</Version>
+    <Version>1.1.4</Version>
     <Authors>Mateusz Tomanek</Authors>
     <Company />
     <Description>Wrapper for chat-GPT</Description>
