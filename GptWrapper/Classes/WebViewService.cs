@@ -2,7 +2,17 @@
 using System.Web;
 
 namespace GptWrapper.Classes;
-public class WebViewService
+
+public interface IWebViewService
+{
+    Task FocusInputBox();
+    Task PrepareWebView();
+    Task SetCursorInTextArea(int index);
+    Task SetInputBoxText(string refactorText);
+    Task SubmitMessage();
+}
+
+public class WebViewService : IWebViewService
 {
     private readonly WebView2 _webView;
 

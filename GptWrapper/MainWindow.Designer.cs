@@ -30,6 +30,7 @@ partial class MainWindow
     /// </summary>
     private void InitializeComponent()
     {
+        System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainWindow));
         WebView = new WebView2();
         settingsButton = new Button();
         settingsPanel = new Panel();
@@ -52,31 +53,36 @@ partial class MainWindow
         // 
         // settingsButton
         // 
-        settingsButton.BackColor = Color.Transparent;
-        settingsButton.Location = new Point(544, 12);
+        settingsButton.BackColor = Color.FromArgb(52, 53, 65);
+        settingsButton.FlatAppearance.BorderSize = 0;
+        settingsButton.FlatStyle = FlatStyle.Flat;
+        settingsButton.Image = (Image)resources.GetObject("settingsButton.Image");
+        settingsButton.Location = new Point(569, 3);
         settingsButton.Name = "settingsButton";
-        settingsButton.Size = new Size(75, 23);
+        settingsButton.Size = new Size(38, 38);
         settingsButton.TabIndex = 1;
-        settingsButton.Text = "settings";
         settingsButton.UseVisualStyleBackColor = false;
         settingsButton.Click += button1_Click;
         // 
         // settingsPanel
         // 
         settingsPanel.Controls.Add(settingsBox);
-        settingsPanel.Location = new Point(12, 41);
+        settingsPanel.Location = new Point(12, 42);
         settingsPanel.Name = "settingsPanel";
-        settingsPanel.Size = new Size(607, 686);
+        settingsPanel.Size = new Size(607, 685);
         settingsPanel.TabIndex = 2;
         settingsPanel.Visible = false;
         // 
         // settingsBox
         // 
+        settingsBox.BackColor = Color.FromArgb(52, 53, 65);
+        settingsBox.BorderStyle = BorderStyle.None;
         settingsBox.Dock = DockStyle.Fill;
+        settingsBox.ForeColor = Color.White;
         settingsBox.Location = new Point(0, 0);
         settingsBox.Multiline = true;
         settingsBox.Name = "settingsBox";
-        settingsBox.Size = new Size(607, 686);
+        settingsBox.Size = new Size(607, 685);
         settingsBox.TabIndex = 0;
         // 
         // MainWindow
@@ -84,8 +90,8 @@ partial class MainWindow
         AutoScaleDimensions = new SizeF(7F, 15F);
         AutoScaleMode = AutoScaleMode.Font;
         ClientSize = new Size(631, 739);
-        Controls.Add(settingsPanel);
         Controls.Add(settingsButton);
+        Controls.Add(settingsPanel);
         Controls.Add(WebView);
         Name = "MainWindow";
         StartPosition = FormStartPosition.CenterParent;

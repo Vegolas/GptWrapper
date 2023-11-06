@@ -1,22 +1,30 @@
 ﻿using WindowsInput;
 
 namespace GptWrapper.Classes;
-public class WindowManagementService
+
+public interface IWindowManagementService
+{
+    Task SendToGptForm(string refactorText);
+    Task SetStartupPosition();
+    Task SwitchFocusWindow();
+}
+
+public class WindowManagementService : IWindowManagementService
 {
     private readonly Form _window;
-    private readonly WebViewService _webViewWorker;
+    private readonly IWebViewService _webViewWorker;
     private readonly InputSimulator _inputSimulator;
 
     private nint _lastActiveWindow;
 
-    public WindowManagementService(Form window, WebViewService viewWorker, WindowsInput.InputSimulator inputSimulator)
+    public WindowManagementService(Form window, IWebViewService viewWorker, InputSimulator inputSimulator)
     {
         _window = window;
         _webViewWorker = viewWorker;
         _inputSimulator = inputSimulator;
     }
 
-    public async Task SetPosition()
+    public async Task SetStartupPosition()
     {
         _window.BringToFront();
         _window.Activate();
@@ -65,7 +73,7 @@ public class WindowManagementService
         {
             _window.WindowState = FormWindowState.Normal;
             await Task.Delay(333);
-            await SetPosition();
+            await SetStartupPosition();
         }
         _window.BringToFront();
         _window.Activate();
