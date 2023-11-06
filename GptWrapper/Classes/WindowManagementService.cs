@@ -5,7 +5,9 @@ namespace GptWrapper.Classes;
 public interface IWindowManagementService
 {
     Task SendToGptForm(string refactorText);
+
     Task SetStartupPosition();
+
     Task SwitchFocusWindow();
 }
 
@@ -63,7 +65,7 @@ public class WindowManagementService : IWindowManagementService
 
         await _webViewWorker.FocusInputBox();
 
-        _inputSimulator.Keyboard.KeyPress(WindowsInput.Native.VirtualKeyCode.SPACE); // Needed for GPT input box to resize after 
+        _inputSimulator.Keyboard.KeyPress(WindowsInput.Native.VirtualKeyCode.SPACE); // Needed for GPT input box to resize after
         _inputSimulator.Keyboard.KeyPress(WindowsInput.Native.VirtualKeyCode.BACK); // recieving new text.
     }
 

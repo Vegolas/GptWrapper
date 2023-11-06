@@ -1,11 +1,13 @@
 ﻿using System.Runtime.InteropServices;
 
 namespace GptWrapper.Classes;
+
 public sealed class KeyboardHook : IDisposable
 {
     // Registers a hot key with Windows.
     [DllImport("user32.dll")]
     private static extern bool RegisterHotKey(nint hWnd, int id, uint fsModifiers, uint vk);
+
     // Unregisters the hot key with Windows.
     [DllImport("user32.dll")]
     private static extern bool UnregisterHotKey(nint hWnd, int id);
@@ -53,7 +55,7 @@ public sealed class KeyboardHook : IDisposable
             DestroyHandle();
         }
 
-        #endregion
+        #endregion IDisposable Members
     }
 
     private Window _window = new Window();
@@ -103,7 +105,7 @@ public sealed class KeyboardHook : IDisposable
         _window.Dispose();
     }
 
-    #endregion
+    #endregion IDisposable Members
 }
 
 /// <summary>

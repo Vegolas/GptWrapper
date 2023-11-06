@@ -6,6 +6,7 @@ namespace GptWrapper.Classes;
 public interface IKeyboardHookService
 {
     void Init();
+
     void ReloadConfiguration(IConfiguration newConfig);
 }
 

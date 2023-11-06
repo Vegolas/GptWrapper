@@ -2,9 +2,9 @@
 using System.Runtime.InteropServices;
 
 namespace GptWrapper.Classes;
+
 public class DllImportWrapper
 {
-
     [DllImport("User32.dll")]
     public static extern bool SetForegroundWindow(nint hWnd);
 
@@ -16,9 +16,9 @@ public class DllImportWrapper
 
     [DllImport("user32.dll")]
     public static extern int SendMessage(nint hWnd, int Msg, int wParam, int lParam);
+
     [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
     private static extern int GetWindowThreadProcessId(nint handle, out int processId);
-
 
     public static bool ApplicationIsActivated()
     {

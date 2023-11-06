@@ -2,6 +2,7 @@
 using System.Text.Json;
 
 namespace GptWrapper.Classes;
+
 public static class Helpers
 {
     public static bool IsValidJson(string jsonString)

@@ -6,9 +6,13 @@ namespace GptWrapper.Classes;
 public interface IWebViewService
 {
     Task FocusInputBox();
+
     Task PrepareWebView();
+
     Task SetCursorInTextArea(int index);
+
     Task SetInputBoxText(string refactorText);
+
     Task SubmitMessage();
 }
 

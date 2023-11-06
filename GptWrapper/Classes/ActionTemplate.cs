@@ -1,4 +1,5 @@
 ﻿namespace GptWrapper.Classes;
+
 public class ActionTemplate
 {
     public string Name { get; set; }

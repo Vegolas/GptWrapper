@@ -5,6 +5,7 @@ namespace GptWrapper.Classes;
 public interface IActionService
 {
     List<ActionTemplate> GetActionsFromConfig(IConfiguration configuration);
+
     Task PerfomKeyAction(Keys key);
 }
 
