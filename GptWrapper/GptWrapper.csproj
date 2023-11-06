@@ -7,7 +7,24 @@
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <StartupObject>GptWrapper.Program</StartupObject>
+    <ApplicationIcon>Resources\openai-logo.ico</ApplicationIcon>
+    <Title>GPT Wrapper</Title>
+    <Version>1.0</Version>
+    <Authors>Mateusz Tomanek</Authors>
+    <Company />
+    <Description>Wrapper for chat-GPT</Description>
+    <PackageIcon>openai-logo.ico</PackageIcon>
+    <RepositoryUrl>https://github.com/Vegolas/GptWrapper</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageLicenseFile>license.md</PackageLicenseFile>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="Resources\openai-logo.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="InputSimulatorCore" Version="1.0.5" />
@@ -32,7 +49,16 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="license.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
     <None Update="Resources\openai-logo.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Update="Resources\settings_icon.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="settings.json">

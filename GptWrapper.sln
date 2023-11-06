@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.7.33808.371
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GptWrapper", "GptWrapper\GptWrapper.csproj", "{B11D6CDC-F61B-41CA-9D9C-244B7F60FD51}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GptWrapper", "GptWrapper\GptWrapper.csproj", "{B11D6CDC-F61B-41CA-9D9C-244B7F60FD51}"
+EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "GptWrapper.Instalator", "GptWrapper.Instalator\GptWrapper.Instalator.vdproj", "{BB90FA3B-EDC6-4F08-9DC2-53FA3D1AFF8C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,8 @@ Global
 		{B11D6CDC-F61B-41CA-9D9C-244B7F60FD51}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B11D6CDC-F61B-41CA-9D9C-244B7F60FD51}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B11D6CDC-F61B-41CA-9D9C-244B7F60FD51}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BB90FA3B-EDC6-4F08-9DC2-53FA3D1AFF8C}.Debug|Any CPU.ActiveCfg = Debug
+		{BB90FA3B-EDC6-4F08-9DC2-53FA3D1AFF8C}.Release|Any CPU.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

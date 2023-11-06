@@ -5,7 +5,7 @@ namespace GptWrapper;
 
 public partial class MainWindow : Form
 {
-    private const string SETTINGS_PATH = "settings.json";
+    private string SETTINGS_PATH = "settings.json";
 
     private WindowsInput.InputSimulator _inputSimulator;
     private IConfiguration _config;
@@ -16,11 +16,31 @@ public partial class MainWindow : Form
     public MainWindow()
     {
         InitializeComponent();
+        
+        AssureConfigFile();
+
         _config = LoadConfiguration();
         _inputSimulator = new WindowsInput.InputSimulator();
         _webViewWorker = new WebViewService(WebView);
         _windowManagement = new WindowManagementService(this, _webViewWorker, _inputSimulator);
         _keyboardHookService = new KeyboardHookService(_config, _windowManagement, _webViewWorker);
+    }
+
+    private void AssureConfigFile()
+    {
+        string appDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+        string appFolder = Path.Combine(appDataFolder, "GptWrapper");
+        string settingsPath = Path.Combine(appFolder, "settings.json");
+        SETTINGS_PATH = settingsPath;
+        if (!Directory.Exists(appFolder))
+        {
+            Directory.CreateDirectory(appFolder);
+        }
+
+        if (File.Exists(SETTINGS_PATH) == false)
+        {
+            File.Copy("settings.json", SETTINGS_PATH);
+        }
     }
 
     protected override async void OnLoad(EventArgs e)

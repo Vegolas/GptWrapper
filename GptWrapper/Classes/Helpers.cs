@@ -33,9 +33,7 @@ public static class Helpers
             return false;
         }
 
-        string appDirectory = AppContext.BaseDirectory;
-        string filePath = Path.Combine(appDirectory, settingsPath);
-        File.WriteAllText(filePath, text, Encoding.UTF8);
+        File.WriteAllText(settingsPath, text, Encoding.UTF8);
 
         return true;
     }
