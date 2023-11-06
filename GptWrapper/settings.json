@@ -1,0 +1,26 @@
+{
+  "FirstKey": "Control",
+  "SecondKey": "Shift",
+  "SubmitKey": "Enter",
+  "FocusKey": "W",
+  "Actions": [
+    {
+      "Name": "Context",
+      "Key": "C",
+      "Template": "@returnPoint\r\n<context>\r\n@focusedText\r\n</context>",
+      "AutoSubmit": false
+    },
+    {
+      "Name": "Refactor",
+      "Key": "R",
+      "Template": "Refactor below code:\r\n<code>\r\n@focusedText\r\n</code>",
+      "AutoSubmit": true
+    },
+    {
+      "Name": "Error",
+      "Key": "E",
+      "Template": "I'm encountering this error:'\r\n<error>\r\n@focusedText\r\n</error>",
+      "AutoSubmit": true
+    }
+  ]
+}

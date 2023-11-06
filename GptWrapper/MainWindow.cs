@@ -1,181 +1,137 @@
-using System.Web;
+using GptWrapper.Classes;
+using Microsoft.Extensions.Configuration;
+using System.Diagnostics;
 
 namespace GptWrapper;
 
 public partial class MainWindow : Form
 {
-    KeyboardHook hook = new KeyboardHook();
-    WindowsInput.InputSimulator iss = new WindowsInput.InputSimulator();
-    nint LastActiveWindow;
+    private const string SETTINGS_PATH = "settings.json";
 
+    private KeyboardHook _keyboardHook;
+    private WindowsInput.InputSimulator _inputSimulator;
+    private IConfiguration _config;
+    private List<ActionTemplate> _actions;
+    private WebViewService _webViewWorker;
+    private WindowManagementService _windowManagement;
+    
     public MainWindow()
     {
         InitializeComponent();
+        _inputSimulator = new WindowsInput.InputSimulator();
+        _webViewWorker = new WebViewService(WebView);
+        _windowManagement = new WindowManagementService(this, _webViewWorker, _inputSimulator);
     }
 
     protected override async void OnLoad(EventArgs e)
     {
         base.OnLoad(e);
+        this.Icon = new Icon("Resources\\openai-logo.ico");
+        LoadConfiguration();
         PrepareKeyboardHooks();
-        await PrepareWebView();
-        await SetPosition();
+        await _webViewWorker.PrepareWebView();
+        await _windowManagement.SetPosition();
+    }
+
+    private void LoadConfiguration()
+    {
+        var builder = new ConfigurationBuilder()
+           .SetBasePath(Directory.GetCurrentDirectory())
+           .AddJsonFile(SETTINGS_PATH, optional: false, reloadOnChange: true);
+
+        _config = builder.Build();
     }
 
     private void PrepareKeyboardHooks()
     {
-        hook.KeyPressed +=
-            new EventHandler<KeyPressedEventArgs>(hook_KeyPressed);
+        _keyboardHook = new KeyboardHook();
+        _actions = new List<ActionTemplate>();
 
-        var firstKey = GptWrapper.ModifierKeys.Control;
-        var secondKey = GptWrapper.ModifierKeys.Shift;
+        _keyboardHook.KeyPressed += new EventHandler<KeyPressedEventArgs>(hook_KeyPressed);
 
-        hook.RegisterHotKey(firstKey | secondKey, Keys.W);
+        var firstKey = Enum.Parse<ModifierKeys>(_config["FirstKey"]);
+        var secondKey = Enum.Parse<ModifierKeys>(_config["SecondKey"]);
 
-        hook.RegisterHotKey(firstKey | secondKey, Keys.R);
+        _keyboardHook.RegisterHotKey(firstKey | secondKey, Enum.Parse<Keys>(_config["FocusKey"]));
+        _keyboardHook.RegisterHotKey(firstKey | secondKey, Enum.Parse<Keys>(_config["SubmitKey"]));
 
-        hook.RegisterHotKey(firstKey | secondKey, Keys.C);
+        _config.GetSection("Actions").Bind(_actions);
 
-        hook.RegisterHotKey(firstKey | secondKey, Keys.E);
-
-        hook.RegisterHotKey(firstKey | secondKey, Keys.Enter);
+        foreach (var action in _actions)
+        {
+            _keyboardHook.RegisterHotKey(firstKey | secondKey, Enum.Parse<Keys>(action.Key));
+            Debug.WriteLine($"Registred action: {action.Name} ({firstKey} + {secondKey} + {action.Key})");
+        }
     }
 
-    private async Task PrepareWebView()
+    private async Task PerformAction(ActionTemplate action)
     {
-        var dataFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "GptWrapper");
-        var env = await Microsoft.Web.WebView2.Core.CoreWebView2Environment.CreateAsync(null, dataFolder, null);
-        await WebView.EnsureCoreWebView2Async(env);
-        WebView.CoreWebView2.Navigate("https://chat.openai.com/");
-        await Task.Delay(1000);
+        var refactorText = await Helpers.GetTemplateWithFocusedText(action.Template);
+        if (string.IsNullOrEmpty(refactorText)) return;
+
+        var index = Helpers.ProcessRefactorText(ref refactorText);
+        await _windowManagement.SendToGptForm(refactorText);
+
+        if (action.AutoSubmit)
+        {
+            await _webViewWorker.SubmitMessage();
+        }
+        else if (index >= 0)
+        {
+            await _webViewWorker.SetCursorInTextArea(index);
+        }
     }
 
-    private async Task SetPosition()
+    private void ReloadKeys()
     {
-        this.BringToFront();
-        this.Activate();
+        DisposeKeyboardHooks();
+        PrepareKeyboardHooks();
+    }
 
-        iss.Keyboard.KeyDown(WindowsInput.Native.VirtualKeyCode.LWIN);
-        iss.Keyboard.KeyPress(WindowsInput.Native.VirtualKeyCode.RIGHT);
-        iss.Keyboard.KeyUp(WindowsInput.Native.VirtualKeyCode.LWIN);
+    private void DisposeKeyboardHooks()
+    {
+        _keyboardHook.KeyPressed -= hook_KeyPressed;
+        _keyboardHook.Dispose();
+    }
 
-        await Task.Delay(250);
+    private void MainWindow_SizeChanged(object sender, EventArgs e)
+    {
+        settingsPanel.Location = new Point(12, 41);
+        settingsPanel.Size = new Size(this.Width - 40, this.Height - 150);
+        settingsButton.Location = new Point(this.Width - 120, 12);
+        settingsBox.Text = File.ReadAllText(SETTINGS_PATH);
+    }
 
-        iss.Keyboard.KeyPress(WindowsInput.Native.VirtualKeyCode.ESCAPE);
-
-        this.Left += 200;
-        this.Width -= 200;
+    private void button1_Click(object sender, EventArgs e)
+    {
+        if (settingsPanel.Visible && Helpers.SaveSettings(settingsBox.Text, SETTINGS_PATH)) // So it's closing right now
+        {
+            LoadConfiguration();
+            ReloadKeys();
+            settingsPanel.Visible = !settingsPanel.Visible;
+        }
+        else if (settingsBox.Visible == false)
+        {
+            settingsPanel.Visible = !settingsPanel.Visible;
+        }
     }
 
     async void hook_KeyPressed(object sender, KeyPressedEventArgs e)
     {
-        if (e.Key == Keys.R)
+        if (e.Key == Enum.Parse<Keys>(_config["FocusKey"]))
         {
-            var text = await GetFocusedText();
-            var refactorText = FormatMessage(text, MessageType.Refactor);
-            if (string.IsNullOrEmpty(refactorText) == false)
-            {
-                await SendToGptForm(refactorText);
-                await SubmitMessage();
-            }
-        }
-        else if (e.Key == Keys.W)
-        {
-            if (DllImportWrapper.ApplicationIsActivated() && LastActiveWindow > 0)
-            {
-                DllImportWrapper.SetForegroundWindow(LastActiveWindow);
-            }
-            else
-            {
-                LastActiveWindow = DllImportWrapper.GetForegroundWindow();
-                await BringToFrontAndFocusInput();
-            }
-        }
-        else if (e.Key == Keys.C)
-        {
-            var text = await GetFocusedText();
-            var askText = FormatMessage(text, MessageType.Ask);
-            if (string.IsNullOrEmpty(askText) == false)
-            {
-                await SendToGptForm(askText);
-                await WebView.ExecuteScriptAsync($"document.getElementById('prompt-textarea').focus();");
-                await WebView.ExecuteScriptAsync($"document.getElementById('prompt-textarea').setSelectionRange(0,0);");
-            }
-        }
-        else if (e.Key == Keys.E)
-        {
-            var text = await GetFocusedText();
-            var errorText = FormatMessage(text, MessageType.Error);
-            if (string.IsNullOrEmpty(errorText) == false)
-            {
-                await SendToGptForm(errorText);
-                await SubmitMessage();
-            }
+            await _windowManagement.SwitchFocusWindow();
         }
         else if (e.Key == Keys.Enter)
         {
-            await SubmitMessage();
+            await _webViewWorker.SubmitMessage();
         }
-    }
-
-    private async Task BringToFrontAndFocusInput()
-    {
-        if (WindowState == FormWindowState.Minimized)
+        else
         {
-            WindowState = FormWindowState.Normal;
-            await Task.Delay(333);
-            await SetPosition();
+            var keyString = e.Key.ToString();
+            var action = _actions.FirstOrDefault(x => x.Key == keyString);
+            if (action == null) return;
+            await PerformAction(action);
         }
-        this.BringToFront();
-        this.Activate();
-        await WebView.ExecuteScriptAsync($"document.getElementById('prompt-textarea').focus();");
-    }
-
-    private async Task SendToGptForm(string refactorText)
-    {
-        var escapedText = HttpUtility.JavaScriptStringEncode(refactorText);
-        await WebView.ExecuteScriptAsync($"document.getElementById('prompt-textarea').value = '{escapedText}'");
-
-        this.BringToFront();
-        this.Activate();
-        WebView.Focus();
-        await WebView.ExecuteScriptAsync($"document.getElementById('prompt-textarea').focus();");
-        iss.Keyboard.KeyPress(WindowsInput.Native.VirtualKeyCode.SPACE);
-    }
-
-    private async Task SubmitMessage()
-    {
-        await Task.Delay(333);
-        await WebView.ExecuteScriptAsync($"document.querySelector('[data-testid=send-button]').click();");
-        await Task.Delay(333);
-    }
-
-    private string FormatMessage(string text, MessageType type)
-    {
-        text = text.Replace('`', '\'');
-
-        if (string.IsNullOrEmpty(text))
-            return string.Empty;
-
-        string template = type switch
-        {
-            MessageType.Ask => $"\r\n<context>\r\n{text}\r\n</context>",
-            MessageType.Refactor => $"Refactor this code:\r\n<code>\r\n{text}\r\n</code>",
-            MessageType.Error => $"Im encountering this error:\r\n<error>\r\n{text}\r\n</error>",
-            _ => text
-        };
-
-        return template;
-    }
-
-
-    private async Task<string> GetFocusedText()
-    {
-        Clipboard.Clear();
-
-        await Task.Delay(500);
-        SendKeys.Send("^{c}");
-        await Task.Delay(250);
-
-        return Clipboard.GetText();
     }
 }

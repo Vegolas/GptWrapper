@@ -1,14 +1,14 @@
 ﻿using System.Runtime.InteropServices;
 
-namespace GptWrapper;
-public sealed  class KeyboardHook : IDisposable
+namespace GptWrapper.Classes;
+public sealed class KeyboardHook : IDisposable
 {
     // Registers a hot key with Windows.
     [DllImport("user32.dll")]
-    private static extern bool RegisterHotKey(IntPtr hWnd, int id, uint fsModifiers, uint vk);
+    private static extern bool RegisterHotKey(nint hWnd, int id, uint fsModifiers, uint vk);
     // Unregisters the hot key with Windows.
     [DllImport("user32.dll")]
-    private static extern bool UnregisterHotKey(IntPtr hWnd, int id);
+    private static extern bool UnregisterHotKey(nint hWnd, int id);
 
     /// <summary>
     /// Represents the window that is used internally to get the messages.
@@ -20,7 +20,7 @@ public sealed  class KeyboardHook : IDisposable
         public Window()
         {
             // create the handle for the window.
-            this.CreateHandle(new CreateParams());
+            CreateHandle(new CreateParams());
         }
 
         /// <summary>
@@ -35,7 +35,7 @@ public sealed  class KeyboardHook : IDisposable
             if (m.Msg == WM_HOTKEY)
             {
                 // get the keys.
-                Keys key = (Keys)(((int)m.LParam >> 16) & 0xFFFF);
+                Keys key = (Keys)((int)m.LParam >> 16 & 0xFFFF);
                 ModifierKeys modifier = (ModifierKeys)((int)m.LParam & 0xFFFF);
 
                 // invoke the event to notify the parent.
@@ -50,7 +50,7 @@ public sealed  class KeyboardHook : IDisposable
 
         public void Dispose()
         {
-            this.DestroyHandle();
+            DestroyHandle();
         }
 
         #endregion
@@ -62,7 +62,7 @@ public sealed  class KeyboardHook : IDisposable
     public KeyboardHook()
     {
         // register the event of the inner native window.
-        _window.KeyPressed += delegate(object sender, KeyPressedEventArgs args)
+        _window.KeyPressed += delegate (object sender, KeyPressedEventArgs args)
         {
             if (KeyPressed != null)
                 KeyPressed(this, args);
